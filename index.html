@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bảng Vàng Chăm Ngoan - Tích Điểm Cho 2 Bé</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --accent: #f59e0b;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --kid1: #ec4899;
+      --kid2: #0ea5e9;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      padding: 16px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: #fff;
+      padding: 20px 24px;
+      border-radius: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+      margin-bottom: 20px;
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+    }
+
+    .sync-badge {
+      background: rgba(255, 255, 255, 0.18);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .profiles {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .profile-card {
+      background: var(--card);
+      border-radius: 18px;
+      padding: 18px;
+      border: 2px solid var(--border);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+    }
+
+    .profile-card.kid1 { border-top: 6px solid var(--kid1); }
+    .profile-card.kid2 { border-top: 6px solid var(--kid2); }
+
+    .profile-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .kid-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .points-box {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .progress-wrap {
+      background: #e2e8f0;
+      border-radius: 999px;
+      height: 12px;
+      overflow: hidden;
+      margin: 10px 0 6px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #22c55e, #2563eb);
+      width: 0%;
+      transition: width 0.35s ease;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .panel {
+      background: var(--card);
+      border-radius: 18px;
+      padding: 18px;
+      border: 1px solid var(--border);
+    }
+
+    .panel h2 {
+      font-size: 1.15rem;
+      margin-bottom: 14px;
+    }
+
+    .task-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+
+    .task-pts {
+      font-weight: 700;
+      color: var(--success);
+      font-size: 0.95rem;
+    }
+
+    .task-pts.minus {
+      color: var(--danger);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 7px 11px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: transform 0.1s ease, opacity 0.2s ease;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    .btn-kid1 { background: #fce7f3; color: #be185d; }
+    .btn-kid2 { background: #e0f2fe; color: #0369a1; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-success { background: var(--success); color: #fff; }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-muted { background: #e2e8f0; color: #334155; }
+
+    .pending-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 10px;
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+
+    .parent-box {
+      background: var(--card);
+      border-radius: 18px;
+      padding: 20px;
+      border: 2px solid #cbd5e1;
+      margin-bottom: 24px;
+    }
+
+    .parent-section {
+      padding-top: 16px;
+      margin-top: 16px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .parent-section h3 {
+      font-size: 1rem;
+      margin-bottom: 8px;
+      color: #1e293b;
+    }
+
+    .row-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+      align-items: center;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      min-width: 140px;
+    }
+
+    .field-group label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    input {
+      padding: 8px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      width: 100%;
+    }
+
+    .manage-task-list {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .manage-task-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.9rem;
+    }
+
+    .note {
+      font-size: 0.83rem;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #0f172a;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      z-index: 999;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>🌟 Bảng Vàng Chăm Ngoan</h1>
+        <p style="font-size: 0.9rem; opacity: 0.92;">Tích điểm vui nhộn cho 2 bé & duyệt nhanh cho bố mẹ</p>
+      </div>
+      <div class="sync-badge" id="syncStatus">Chế độ lưu máy (Chưa nối Cloud)</div>
+    </header>
+
+    <section class="profiles" id="profilesContainer"></section>
+
+    <section class="grid-2">
+      <div class="panel">
+        <h2>📋 Nhiệm vụ & Quy tắc</h2>
+        <div id="tasksContainer"></div>
+      </div>
+
+      <div class="panel">
+        <h2>⏳ Danh sách chờ duyệt</h2>
+        <div id="pendingContainer"></div>
+      </div>
+    </section>
+
+    <section class="parent-box">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <h2>🔐 Góc Bố Mẹ & Cài đặt</h2>
+        <div id="parentLockArea" style="display:flex; gap:8px; align-items:center;">
+          <input type="password" id="pinInput" placeholder="Nhập mã PIN" autocomplete="off" style="max-width:190px;" />
+          <button class="btn-primary" id="unlockBtn" onclick="toggleParentLock()">Mở khóa</button>
+        </div>
+      </div>
+
+      <div id="parentControls" style="display:none;">
+        <!-- Mục 1: Đổi tên 2 bé & mốc điểm -->
+        <div class="parent-section">
+          <h3>1. Đổi tên 2 bé & Mốc điểm mục tiêu</h3>
+          <div class="row-form">
+            <div class="field-group">
+              <label>Tên Bé 1</label>
+              <input type="text" id="editKid1Name" placeholder="Tên bé 1" />
+            </div>
+            <div class="field-group" style="max-width:140px;">
+              <label>Mục tiêu Bé 1 (điểm)</label>
+              <input type="number" id="editKid1Goal" placeholder="100" />
+            </div>
+            <div class="field-group">
+              <label>Tên Bé 2</label>
+              <input type="text" id="editKid2Name" placeholder="Tên bé 2" />
+            </div>
+            <div class="field-group" style="max-width:140px;">
+              <label>Mục tiêu Bé 2 (điểm)</label>
+              <input type="number" id="editKid2Goal" placeholder="100" />
+            </div>
+          </div>
+          <div class="row-form" style="margin-top:10px;">
+            <button class="btn-success" onclick="saveKidsProfile()">💾 Lưu thông tin 2 bé</button>
+          </div>
+        </div>
+
+        <!-- Mục 2: Thêm & Xóa nhiệm vụ -->
+        <div class="parent-section">
+          <h3>2. Thêm & Xóa nhiệm vụ</h3>
+          <div class="row-form">
+            <input type="text" id="newTaskTitle" placeholder="Tên nhiệm vụ mới (vd: Gấp quần áo)" />
+            <input type="number" id="newTaskPoints" placeholder="Điểm (+10 hoặc -10)" style="max-width:170px;" />
+            <button class="btn-primary" onclick="addTask()">+ Thêm nhiệm vụ</button>
+          </div>
+          <div class="manage-task-list" id="manageTasksContainer"></div>
+        </div>
+
+        <!-- Mục 3: Đồng bộ Cloud -->
+        <div class="parent-section">
+          <h3>3. Đồng bộ nhiều thiết bị qua Firebase Realtime Database</h3>
+          <div class="row-form">
+            <input type="text" id="firebaseUrlInput" placeholder="Dán link Database (vd: https://...firebasedatabase.app)" />
+            <input type="text" id="familyCodeInput" placeholder="Mã Gia Đình (vd: giadinh2026)" style="max-width:200px;" />
+            <button class="btn-success" onclick="saveCloudConfig()">Kết nối & Đồng bộ</button>
+            <button class="btn-muted" onclick="clearCloudConfig()">Ngắt Cloud</button>
+          </div>
+          <p class="note">Nhập cùng 1 link Database và cùng 1 Mã Gia Đình trên điện thoại bố mẹ và máy của 2 bé để dữ liệu tự động khớp nhau.</p>
+        </div>
+
+        <!-- Mục 4: Đổi mã PIN -->
+        <div class="parent-section">
+          <h3>4. Đổi mã PIN Góc Bố Mẹ</h3>
+          <div class="row-form">
+            <input type="password" id="newPinInput" placeholder="Nhập mã PIN mới" autocomplete="off" style="max-width:220px;" />
+            <button class="btn-primary" onclick="changeParentPin()">Đổi mã PIN</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="toast" id="toastMsg"></div>
+
+  <script>
+    const STORAGE_KEY = "family_rewards_state_v2";
+    const CLOUD_CFG_KEY = "family_rewards_cloud_cfg_v1";
+
+    const defaultState = {
+      pin: "1234",
+      kids: [
+        { id: "kid1", name: "Bé Lớn", points: 0, goal: 100 },
+        { id: "kid2", name: "Bé Nhỏ", points: 0, goal: 100 }
+      ],
+      tasks: [
+        { id: "t1", title: "Lau nhà", points: 10 },
+        { id: "t2", title: "Rửa bát", points: 10 },
+        { id: "t3", title: "Phơi đồ", points: 10 },
+        { id: "t4", title: "Điểm 10", points: 10 },
+        { id: "t5", title: "Ngủ muộn", points: -10 }
+      ],
+      pending: []
+    };
+
+    let state = loadLocalState();
+    let cloudCfg = loadCloudConfig();
+    let pollTimer = null;
+    let isParentUnlocked = false;
+
+    function showToast(msg) {
+      const el = document.getElementById("toastMsg");
+      el.textContent = msg;
+      el.classList.add("show");
+      setTimeout(() => el.classList.remove("show"), 2400);
+    }
+
+    function loadLocalState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem("family_rewards_state_v1");
+        if (!raw) return structuredClone(defaultState);
+        const parsed = JSON.parse(raw);
+        return {
+          pin: parsed.pin ? String(parsed.pin) : "1234",
+          kids: Array.isArray(parsed.kids) && parsed.kids.length === 2 ? parsed.kids : structuredClone(defaultState.kids),
+          tasks: Array.isArray(parsed.tasks) ? parsed.tasks : structuredClone(defaultState.tasks),
+          pending: Array.isArray(parsed.pending) ? parsed.pending : []
+        };
+      } catch {
+        return structuredClone(defaultState);
+      }
+    }
+
+    function loadCloudConfig() {
+      try {
+        return JSON.parse(localStorage.getItem(CLOUD_CFG_KEY)) || null;
+      } catch {
+        return null;
+      }
+    }
+
+    function saveLocalState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function getCloudEndpoint() {
+      if (!cloudCfg || !cloudCfg.url || !cloudCfg.code) return null;
+      const cleanUrl = cloudCfg.url.trim().replace(/\/+$/, "");
+      const cleanCode = encodeURIComponent(cloudCfg.code.trim());
+      return `${cleanUrl}/families/${cleanCode}.json`;
+    }
+
+    async function pushToCloud() {
+      const endpoint = getCloudEndpoint();
+      if (!endpoint) return;
+      try {
+        await fetch(endpoint, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(state)
+        });
+        updateSyncBadge("☁️ Đã đồng bộ Cloud (" + cloudCfg.code + ")");
+      } catch {
+        updateSyncBadge("⚠️ Lỗi gửi dữ liệu Cloud");
+      }
+    }
+
+    async function pullFromCloud() {
+      const endpoint = getCloudEndpoint();
+      if (!endpoint) return;
+      try {
+        const res = await fetch(endpoint);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data && Array.isArray(data.kids) && data.kids.length === 2) {
+          state = {
+            pin: data.pin ? String(data.pin) : state.pin || "1234",
+            kids: data.kids,
+            tasks: Array.isArray(data.tasks) ? data.tasks : [],
+            pending: Array.isArray(data.pending) ? data.pending : []
+          };
+          saveLocalState();
+          renderAll();
+          updateSyncBadge("☁️ Đang đồng bộ trực tiếp (" + cloudCfg.code + ")");
+        } else {
+          await pushToCloud();
+        }
+      } catch {
+        updateSyncBadge("⚠️ Không kết nối được Cloud");
+      }
+    }
+
+    function updateSyncBadge(text) {
+      document.getElementById("syncStatus").textContent = text;
+    }
+
+    function startCloudPolling() {
+      if (pollTimer) clearInterval(pollTimer);
+      const endpoint = getCloudEndpoint();
+      if (!endpoint) {
+        updateSyncBadge("Chế độ lưu máy (Chưa nối Cloud)");
+        return;
+      }
+      pullFromCloud();
+      pollTimer = setInterval(pullFromCloud, 4000);
+    }
+
+    function saveAndSync() {
+      saveLocalState();
+      renderAll();
+      pushToCloud();
+    }
+
+    function requestTask(taskId, kidId) {
+      const task = state.tasks.find(t => t.id === taskId);
+      const kid = state.kids.find(k => k.id === kidId);
+      if (!task || !kid) return;
+
+      state.pending.unshift({
+        id: "p_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6),
+        kidId: kid.id,
+        kidName: kid.name,
+        taskTitle: task.title,
+        points: Number(task.points) || 0,
+        createdAt: new Date().toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })
+      });
+      saveAndSync();
+      showToast(`Đã gửi yêu cầu "${task.title}" của ${kid.name}!`);
+    }
+
+    function approvePending(pendingId) {
+      const idx = state.pending.findIndex(p => p.id === pendingId);
+      if (idx === -1) return;
+      const item = state.pending[idx];
+      const kid = state.kids.find(k => k.id === item.kidId);
+      if (kid) {
+        kid.points = Number(kid.points || 0) + Number(item.points || 0);
+      }
+      state.pending.splice(idx, 1);
+      saveAndSync();
+      showToast(`Đã duyệt ${item.points > 0 ? "+" : ""}${item.points} điểm cho ${item.kidName}!`);
+    }
+
+    function rejectPending(pendingId) {
+      state.pending = state.pending.filter(p => p.id !== pendingId);
+      saveAndSync();
+      showToast("Đã từ chối yêu cầu.");
+    }
+
+    function populateParentInputs() {
+      document.getElementById("editKid1Name").value = state.kids[0].name;
+      document.getElementById("editKid1Goal").value = state.kids[0].goal || 100;
+      document.getElementById("editKid2Name").value = state.kids[1].name;
+      document.getElementById("editKid2Goal").value = state.kids[1].goal || 100;
+      if (cloudCfg) {
+        document.getElementById("firebaseUrlInput").value = cloudCfg.url || "";
+        document.getElementById("familyCodeInput").value = cloudCfg.code || "";
+      }
+    }
+
+    function toggleParentLock() {
+      const controls = document.getElementById("parentControls");
+      const pinInput = document.getElementById("pinInput");
+      const unlockBtn = document.getElementById("unlockBtn");
+
+      if (isParentUnlocked) {
+        isParentUnlocked = false;
+        controls.style.display = "none";
+        pinInput.style.display = "inline-block";
+        pinInput.value = "";
+        unlockBtn.textContent = "Mở khóa";
+        unlockBtn.className = "btn-primary";
+        return;
+      }
+
+      const val = pinInput.value.trim();
+      const currentPin = state.pin || "1234";
+      if (val === currentPin) {
+        isParentUnlocked = true;
+        controls.style.display = "block";
+        pinInput.style.display = "none";
+        unlockBtn.textContent = "Khóa lại";
+        unlockBtn.className = "btn-muted";
+        populateParentInputs();
+      } else {
+        alert("Mã PIN chưa đúng.");
+      }
+    }
+
+    function saveKidsProfile() {
+      const name1 = document.getElementById("editKid1Name").value.trim();
+      const goal1 = parseInt(document.getElementById("editKid1Goal").value, 10);
+      const name2 = document.getElementById("editKid2Name").value.trim();
+      const goal2 = parseInt(document.getElementById("editKid2Goal").value, 10);
+
+      if (!name1 || !name2) {
+        alert("Vui lòng nhập đầy đủ tên của cả 2 bé.");
+        return;
+      }
+      state.kids[0].name = name1;
+      state.kids[0].goal = !Number.isNaN(goal1) && goal1 > 0 ? goal1 : 100;
+      state.kids[1].name = name2;
+      state.kids[1].goal = !Number.isNaN(goal2) && goal2 > 0 ? goal2 : 100;
+
+      saveAndSync();
+      showToast("Đã lưu tên 2 bé và mốc điểm mục tiêu!");
+    }
+
+    function add
