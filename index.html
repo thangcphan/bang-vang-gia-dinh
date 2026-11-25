@@ -204,38 +204,11 @@
       margin-bottom: 24px;
     }
 
-    .parent-section {
-      padding-top: 16px;
-      margin-top: 16px;
-      border-top: 1px dashed var(--border);
-    }
-
-    .parent-section h3 {
-      font-size: 1rem;
-      margin-bottom: 8px;
-      color: #1e293b;
-    }
-
     .row-form {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-top: 8px;
-      align-items: center;
-    }
-
-    .field-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      flex: 1;
-      min-width: 140px;
-    }
-
-    .field-group label {
-      font-size: 0.78rem;
-      color: var(--muted);
-      font-weight: 600;
+      margin-top: 10px;
     }
 
     input {
@@ -243,52 +216,14 @@
       border: 1px solid #cbd5e1;
       border-radius: 10px;
       font-size: 0.9rem;
-      width: 100%;
-    }
-
-    .manage-task-list {
-      margin-top: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .manage-task-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 12px;
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      font-size: 0.9rem;
+      flex: 1;
+      min-width: 160px;
     }
 
     .note {
-      font-size: 0.83rem;
+      font-size: 0.85rem;
       color: var(--muted);
-      margin-top: 6px;
-    }
-
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #0f172a;
-      color: #fff;
-      padding: 10px 16px;
-      border-radius: 12px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s ease;
-      z-index: 999;
-    }
-
-    .toast.show {
-      opacity: 1;
+      margin-top: 8px;
     }
   </style>
 </head>
@@ -299,7 +234,7 @@
         <h1>🌟 Bảng Vàng Chăm Ngoan</h1>
         <p style="font-size: 0.9rem; opacity: 0.92;">Tích điểm vui nhộn cho 2 bé & duyệt nhanh cho bố mẹ</p>
       </div>
-      <div class="sync-badge" id="syncStatus">Chế độ lưu máy (Chưa nối Cloud)</div>
+      <div class="sync-badge" id="syncStatus">Đang dùng chế độ lưu máy (Chưa nối Cloud)</div>
     </header>
 
     <section class="profiles" id="profilesContainer"></section>
@@ -318,83 +253,39 @@
 
     <section class="parent-box">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-        <h2>🔐 Góc Bố Mẹ & Cài đặt</h2>
+        <h2>🔐 Góc Bố Mẹ & Đồng bộ Cloud</h2>
         <div id="parentLockArea" style="display:flex; gap:8px; align-items:center;">
-          <input type="password" id="pinInput" placeholder="Nhập mã PIN" autocomplete="off" style="max-width:190px;" />
-          <button class="btn-primary" id="unlockBtn" onclick="toggleParentLock()">Mở khóa</button>
+          <input type="password" id="pinInput" placeholder="Nhập mã PIN (mặc định 1234)" style="max-width:210px;" />
+          <button class="btn-primary" onclick="unlockParent()">Mở khóa</button>
         </div>
       </div>
 
-      <div id="parentControls" style="display:none;">
-        <!-- Mục 1: Đổi tên 2 bé & mốc điểm -->
-        <div class="parent-section">
-          <h3>1. Đổi tên 2 bé & Mốc điểm mục tiêu</h3>
-          <div class="row-form">
-            <div class="field-group">
-              <label>Tên Bé 1</label>
-              <input type="text" id="editKid1Name" placeholder="Tên bé 1" />
-            </div>
-            <div class="field-group" style="max-width:140px;">
-              <label>Mục tiêu Bé 1 (điểm)</label>
-              <input type="number" id="editKid1Goal" placeholder="100" />
-            </div>
-            <div class="field-group">
-              <label>Tên Bé 2</label>
-              <input type="text" id="editKid2Name" placeholder="Tên bé 2" />
-            </div>
-            <div class="field-group" style="max-width:140px;">
-              <label>Mục tiêu Bé 2 (điểm)</label>
-              <input type="number" id="editKid2Goal" placeholder="100" />
-            </div>
-          </div>
-          <div class="row-form" style="margin-top:10px;">
-            <button class="btn-success" onclick="saveKidsProfile()">💾 Lưu thông tin 2 bé</button>
-          </div>
+      <div id="parentControls" style="display:none; margin-top:16px;">
+        <h3>1. Đồng bộ nhiều thiết bị qua Firebase Realtime Database</h3>
+        <div class="row-form">
+          <input type="text" id="firebaseUrlInput" placeholder="Dán link Database (vd: https://...firebasedatabase.app)" />
+          <input type="text" id="familyCodeInput" placeholder="Mã Gia Đình (vd: giadinh2026)" style="max-width:200px;" />
+          <button class="btn-success" onclick="saveCloudConfig()">Kết nối & Đồng bộ</button>
+          <button class="btn-muted" onclick="clearCloudConfig()">Ngắt Cloud</button>
         </div>
+        <p class="note">Mẹo: Nhập cùng 1 link Database và cùng 1 Mã Gia Đình trên các thiết bị để dữ liệu tự khớp nhau.</p>
 
-        <!-- Mục 2: Thêm & Xóa nhiệm vụ -->
-        <div class="parent-section">
-          <h3>2. Thêm & Xóa nhiệm vụ</h3>
-          <div class="row-form">
-            <input type="text" id="newTaskTitle" placeholder="Tên nhiệm vụ mới (vd: Gấp quần áo)" />
-            <input type="number" id="newTaskPoints" placeholder="Điểm (+10 hoặc -10)" style="max-width:170px;" />
-            <button class="btn-primary" onclick="addTask()">+ Thêm nhiệm vụ</button>
-          </div>
-          <div class="manage-task-list" id="manageTasksContainer"></div>
-        </div>
-
-        <!-- Mục 3: Đồng bộ Cloud -->
-        <div class="parent-section">
-          <h3>3. Đồng bộ nhiều thiết bị qua Firebase Realtime Database</h3>
-          <div class="row-form">
-            <input type="text" id="firebaseUrlInput" placeholder="Dán link Database (vd: https://...firebasedatabase.app)" />
-            <input type="text" id="familyCodeInput" placeholder="Mã Gia Đình (vd: giadinh2026)" style="max-width:200px;" />
-            <button class="btn-success" onclick="saveCloudConfig()">Kết nối & Đồng bộ</button>
-            <button class="btn-muted" onclick="clearCloudConfig()">Ngắt Cloud</button>
-          </div>
-          <p class="note">Nhập cùng 1 link Database và cùng 1 Mã Gia Đình trên điện thoại bố mẹ và máy của 2 bé để dữ liệu tự động khớp nhau.</p>
-        </div>
-
-        <!-- Mục 4: Đổi mã PIN -->
-        <div class="parent-section">
-          <h3>4. Đổi mã PIN Góc Bố Mẹ</h3>
-          <div class="row-form">
-            <input type="password" id="newPinInput" placeholder="Nhập mã PIN mới" autocomplete="off" style="max-width:220px;" />
-            <button class="btn-primary" onclick="changeParentPin()">Đổi mã PIN</button>
-          </div>
+        <h3 style="margin-top:18px;">2. Thêm nhiệm vụ mới</h3>
+        <div class="row-form">
+          <input type="text" id="newTaskTitle" placeholder="Tên nhiệm vụ (vd: Gấp quần áo)" />
+          <input type="number" id="newTaskPoints" placeholder="Điểm (+10 hoặc -10)" style="max-width:160px;" />
+          <button class="btn-primary" onclick="addTask()">Thêm nhiệm vụ</button>
         </div>
       </div>
     </section>
   </div>
 
-  <div class="toast" id="toastMsg"></div>
-
   <script>
-    const STORAGE_KEY = "family_rewards_state_v2";
+    const STORAGE_KEY = "family_rewards_state_v1";
     const CLOUD_CFG_KEY = "family_rewards_cloud_cfg_v1";
+    const PARENT_PIN = "1234";
 
     const defaultState = {
-      pin: "1234",
       kids: [
         { id: "kid1", name: "Bé Lớn", points: 0, goal: 100 },
         { id: "kid2", name: "Bé Nhỏ", points: 0, goal: 100 }
@@ -412,22 +303,13 @@
     let state = loadLocalState();
     let cloudCfg = loadCloudConfig();
     let pollTimer = null;
-    let isParentUnlocked = false;
-
-    function showToast(msg) {
-      const el = document.getElementById("toastMsg");
-      el.textContent = msg;
-      el.classList.add("show");
-      setTimeout(() => el.classList.remove("show"), 2400);
-    }
 
     function loadLocalState() {
       try {
-        const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem("family_rewards_state_v1");
+        const raw = localStorage.getItem(STORAGE_KEY);
         if (!raw) return structuredClone(defaultState);
         const parsed = JSON.parse(raw);
         return {
-          pin: parsed.pin ? String(parsed.pin) : "1234",
           kids: Array.isArray(parsed.kids) && parsed.kids.length === 2 ? parsed.kids : structuredClone(defaultState.kids),
           tasks: Array.isArray(parsed.tasks) ? parsed.tasks : structuredClone(defaultState.tasks),
           pending: Array.isArray(parsed.pending) ? parsed.pending : []
@@ -480,7 +362,6 @@
         const data = await res.json();
         if (data && Array.isArray(data.kids) && data.kids.length === 2) {
           state = {
-            pin: data.pin ? String(data.pin) : state.pin || "1234",
             kids: data.kids,
             tasks: Array.isArray(data.tasks) ? data.tasks : [],
             pending: Array.isArray(data.pending) ? data.pending : []
@@ -531,7 +412,6 @@
         createdAt: new Date().toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })
       });
       saveAndSync();
-      showToast(`Đã gửi yêu cầu "${task.title}" của ${kid.name}!`);
     }
 
     function approvePending(pendingId) {
@@ -544,72 +424,145 @@
       }
       state.pending.splice(idx, 1);
       saveAndSync();
-      showToast(`Đã duyệt ${item.points > 0 ? "+" : ""}${item.points} điểm cho ${item.kidName}!`);
     }
 
     function rejectPending(pendingId) {
       state.pending = state.pending.filter(p => p.id !== pendingId);
       saveAndSync();
-      showToast("Đã từ chối yêu cầu.");
     }
 
-    function populateParentInputs() {
-      document.getElementById("editKid1Name").value = state.kids[0].name;
-      document.getElementById("editKid1Goal").value = state.kids[0].goal || 100;
-      document.getElementById("editKid2Name").value = state.kids[1].name;
-      document.getElementById("editKid2Goal").value = state.kids[1].goal || 100;
-      if (cloudCfg) {
-        document.getElementById("firebaseUrlInput").value = cloudCfg.url || "";
-        document.getElementById("familyCodeInput").value = cloudCfg.code || "";
-      }
-    }
-
-    function toggleParentLock() {
-      const controls = document.getElementById("parentControls");
-      const pinInput = document.getElementById("pinInput");
-      const unlockBtn = document.getElementById("unlockBtn");
-
-      if (isParentUnlocked) {
-        isParentUnlocked = false;
-        controls.style.display = "none";
-        pinInput.style.display = "inline-block";
-        pinInput.value = "";
-        unlockBtn.textContent = "Mở khóa";
-        unlockBtn.className = "btn-primary";
-        return;
-      }
-
-      const val = pinInput.value.trim();
-      const currentPin = state.pin || "1234";
-      if (val === currentPin) {
-        isParentUnlocked = true;
-        controls.style.display = "block";
-        pinInput.style.display = "none";
-        unlockBtn.textContent = "Khóa lại";
-        unlockBtn.className = "btn-muted";
-        populateParentInputs();
+    function unlockParent() {
+      const val = document.getElementById("pinInput").value.trim();
+      if (val === PARENT_PIN) {
+        document.getElementById("parentControls").style.display = "block";
+        if (cloudCfg) {
+          document.getElementById("firebaseUrlInput").value = cloudCfg.url || "";
+          document.getElementById("familyCodeInput").value = cloudCfg.code || "";
+        }
       } else {
-        alert("Mã PIN chưa đúng.");
+        alert("Mã PIN chưa đúng (mặc định là 1234).");
       }
     }
 
-    function saveKidsProfile() {
-      const name1 = document.getElementById("editKid1Name").value.trim();
-      const goal1 = parseInt(document.getElementById("editKid1Goal").value, 10);
-      const name2 = document.getElementById("editKid2Name").value.trim();
-      const goal2 = parseInt(document.getElementById("editKid2Goal").value, 10);
-
-      if (!name1 || !name2) {
-        alert("Vui lòng nhập đầy đủ tên của cả 2 bé.");
+    function saveCloudConfig() {
+      const url = document.getElementById("firebaseUrlInput").value.trim();
+      const code = document.getElementById("familyCodeInput").value.trim();
+      if (!url || !code) {
+        alert("Vui lòng nhập đầy đủ link Firebase Database và Mã Gia Đình.");
         return;
       }
-      state.kids[0].name = name1;
-      state.kids[0].goal = !Number.isNaN(goal1) && goal1 > 0 ? goal1 : 100;
-      state.kids[1].name = name2;
-      state.kids[1].goal = !Number.isNaN(goal2) && goal2 > 0 ? goal2 : 100;
-
-      saveAndSync();
-      showToast("Đã lưu tên 2 bé và mốc điểm mục tiêu!");
+      cloudCfg = { url, code };
+      localStorage.setItem(CLOUD_CFG_KEY, JSON.stringify(cloudCfg));
+      startCloudPolling();
     }
 
-    function add
+    function clearCloudConfig() {
+      cloudCfg = null;
+      localStorage.removeItem(CLOUD_CFG_KEY);
+      if (pollTimer) clearInterval(pollTimer);
+      updateSyncBadge("Chế độ lưu máy (Chưa nối Cloud)");
+    }
+
+    function addTask() {
+      const title = document.getElementById("newTaskTitle").value.trim();
+      const pts = parseInt(document.getElementById("newTaskPoints").value, 10);
+      if (!title || Number.isNaN(pts)) {
+        alert("Nhập tên nhiệm vụ và số điểm (ví dụ 10 hoặc -10).");
+        return;
+      }
+      state.tasks.push({
+        id: "t_" + Date.now(),
+        title,
+        points: pts
+      });
+      document.getElementById("newTaskTitle").value = "";
+      document.getElementById("newTaskPoints").value = "";
+      saveAndSync();
+    }
+
+    function renderProfiles() {
+      const el = document.getElementById("profilesContainer");
+      el.innerHTML = state.kids.map((kid, i) => {
+        const goal = kid.goal || 100;
+        const pct = Math.max(0, Math.min(100, Math.round((kid.points / goal) * 100)));
+        const cls = i === 0 ? "kid1" : "kid2";
+        return `
+          <div class="profile-card ${cls}">
+            <div class="profile-top">
+              <div class="kid-name">${escapeHtml(kid.name)}</div>
+              <div class="points-box">${kid.points} điểm</div>
+            </div>
+            <div style="font-size:0.85rem; color:var(--muted);">Mục tiêu chặng này: ${goal} điểm (${pct}%)</div>
+            <div class="progress-wrap">
+              <div class="progress-bar" style="width:${pct}%"></div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderTasks() {
+      const el = document.getElementById("tasksContainer");
+      const k1 = state.kids[0];
+      const k2 = state.kids[1];
+      el.innerHTML = state.tasks.map(t => {
+        const isMinus = Number(t.points) < 0;
+        const labelPts = (Number(t.points) > 0 ? "+" : "") + t.points + "đ";
+        return `
+          <div class="task-item">
+            <div>
+              <div style="font-weight:600;">${escapeHtml(t.title)}</div>
+              <div class="task-pts ${isMinus ? "minus" : ""}">${labelPts}</div>
+            </div>
+            <div class="btn-group">
+              <button class="btn-kid1" onclick="requestTask('${t.id}', '${k1.id}')">${escapeHtml(k1.name)}</button>
+              <button class="btn-kid2" onclick="requestTask('${t.id}', '${k2.id}')">${escapeHtml(k2.name)}</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderPending() {
+      const el = document.getElementById("pendingContainer");
+      if (!state.pending.length) {
+        el.innerHTML = `<p class="note">Chưa có yêu cầu nào chờ duyệt.</p>`;
+        return;
+      }
+      el.innerHTML = state.pending.map(p => {
+        const sign = Number(p.points) > 0 ? "+" : "";
+        return `
+          <div class="pending-item">
+            <div>
+              <strong>${escapeHtml(p.kidName)}</strong>: ${escapeHtml(p.taskTitle)}
+              <span style="font-weight:700;">(${sign}${p.points}đ)</span>
+              <div style="font-size:0.78rem; color:var(--muted);">Lúc ${p.createdAt}</div>
+            </div>
+            <div class="btn-group">
+              <button class="btn-success" onclick="approvePending('${p.id}')">Duyệt</button>
+              <button class="btn-danger" onclick="rejectPending('${p.id}')">Từ chối</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function renderAll() {
+      renderProfiles();
+      renderTasks();
+      renderPending();
+    }
+
+    renderAll();
+    startCloudPolling();
+  </script>
+</body>
+</html>
